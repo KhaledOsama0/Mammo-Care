@@ -53,7 +53,6 @@ The initial development phase focuses on the **patient experience**: account man
 | **Medical Image Upload** | Select breast imaging scans from the device and upload them for AI analysis. |
 | **AI-Powered Image Analysis** | Submit uploaded scans to the integrated AI model and receive the generated analysis output. |
 | **Assessment Results** | View the analysis outcome and its associated assessment details in a structured results interface. |
-| **Analysis History** | Browse previously submitted scans and review their corresponding results. |
 | **Patient Profile** | View and update personal account information. |
 
 > These features define the scope of the initial phase and are being implemented. See [Project Status](#project-status) for what is in the repository today.
