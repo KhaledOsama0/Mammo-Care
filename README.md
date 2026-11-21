@@ -31,8 +31,6 @@
 - [Project Structure](#project-structure)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
-- [Author](#author)
-
 ---
 
 ## About the Project
@@ -75,7 +73,6 @@ The initial development phase focuses on the **patient experience**: account man
 | Framework | [Flutter](https://flutter.dev) (Material Design) |
 | Language | [Dart](https://dart.dev) `^3.13.7` |
 | Backend | [Supabase](https://supabase.com) via [`supabase_flutter`](https://pub.dev/packages/supabase_flutter) `^2.18.3` |
-| Linting | [`flutter_lints`](https://pub.dev/packages/flutter_lints) `^6.0.0` |
 
 ## Getting Started
 
@@ -199,10 +196,6 @@ Contributions, issues and suggestions are welcome.
 5. Open a Pull Request
 
 Please run `flutter analyze` and `flutter test` before submitting.
-
-## Author
-
-**Khaled Osama** — [@KhaledOsama0](https://github.com/KhaledOsama0)
 
 ---
 
