@@ -88,6 +88,41 @@ class AppLocalizationsAr extends AppLocalizations {
   String get fullNameHint => 'أدخل اسمك الكامل';
 
   @override
+  String get firstName => 'الاسم الأول';
+
+  @override
+  String get firstNameHint => 'أدخل الاسم الأول';
+
+  @override
+  String get lastName => 'اسم العائلة';
+
+  @override
+  String get lastNameHint => 'أدخل اسم العائلة';
+
+  @override
+  String get signUpSubtitle =>
+      'مساحة آمنة لفحوصاتك وتقاريرك وفريق رعايتك الصحية.';
+
+  @override
+  String get forgotPasswordSubtitle =>
+      'أدخل بريدك الإلكتروني وسنرسل لك رمز تحقق آمن.';
+
+  @override
+  String get sendVerificationCode => 'إرسال رمز التحقق';
+
+  @override
+  String get invalidEmail => 'يرجى إدخال بريد إلكتروني صحيح';
+
+  @override
+  String get passwordTooShort => 'يجب ألا تقل كلمة المرور عن 6 خانات';
+
+  @override
+  String get passwordsDoNotMatch => 'كلمات المرور غير متطابقة';
+
+  @override
+  String get requiredField => 'هذا الحقل مطلوب';
+
+  @override
   String get confirmPassword => 'تأكيد كلمة المرور';
 
   @override

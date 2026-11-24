@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mammo_care/core/theme/app_colors.dart';
-import 'package:mammo_care/core/theme/app_text_styles.dart';
-import 'package:mammo_care/core/widgets/custom_elevated_button.dart';
-import 'package:mammo_care/features/auth/presentation/screens/forgot_pass_screen.dart';
-import 'package:mammo_care/features/auth/presentation/screens/sign_up_screen.dart';
-import 'package:mammo_care/features/auth/presentation/widgets/auth_footer_text.dart';
-import 'package:mammo_care/features/auth/presentation/widgets/auth_header.dart';
-import 'package:mammo_care/features/auth/presentation/widgets/custom_text_field.dart';
-import 'package:mammo_care/features/auth/presentation/widgets/pass_text_field.dart';
-import 'package:mammo_care/l10n/app_localizations_en.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../core/localization/locale_cubit.dart';
+import '../../../../core/router/app_routes.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/theme/theme_cubit.dart';
+import '../../../../core/utils/context_ext.dart';
+import '../../../../core/widgets/custom_elevated_button.dart';
+import '../widgets/auth_footer_text.dart';
+import '../widgets/auth_header.dart';
+import '../widgets/custom_text_field.dart';
+import '../widgets/pass_text_field.dart';
 
 class LogInScreen extends StatefulWidget {
   const LogInScreen({super.key});
@@ -19,85 +22,190 @@ class LogInScreen extends StatefulWidget {
 }
 
 class _LogInScreenState extends State<LogInScreen> {
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passController = TextEditingController();
+  bool _isLoading = false;
+
+  void _onSignInPressed() {
+    if (_formKey.currentState?.validate() ?? false) {
+      setState(() => _isLoading = true);
+      // Simulating action or connecting to Supabase
+      Future.delayed(const Duration(milliseconds: 1200), () {
+        if (mounted) {
+          setState(() => _isLoading = false);
+        }
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.of(context).background,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 44.h),
+    final colors = AppColors.of(context);
+    final styles = AppTextStyles.of(context);
+    final l10n = context.l10n;
+    final isDesktopOrWeb = context.isDesktopOrWeb;
+
+    final content = SafeArea(
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 28.w, vertical: 24.h),
+          child: Form(
+            key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                //* login screen header
-                AuthHeader(
-                    authTitle: AppLocalizationsEn().welcomeBack,
-                    authSubTitle: AppLocalizationsEn().signInSubtitle),
-                SizedBox(height: 28.h),
-
-                //*email & pass textfields
-                CustomTextField(
-                  hintTxt: AppLocalizationsEn().emailHint,
-                  iconPath: 'assets/icons/msg_icon.svg',
-                  controller: emailController,
-                ),
-                SizedBox(height: 12.h),
-                PassTextField(
-                  hintTxt: AppLocalizationsEn().passwordHint,
-                  iconPath: 'assets/icons/lock_icon.svg',
-                  controller: passController,
-                ),
-                SizedBox(height: 46.h),
-
-                //* login button
-
-                CustomElevatedButton(
-                  label: AppLocalizationsEn().signIn,
-                  buttonClr: AppColors.of(context).primary,
-                  labelClr: Colors.white,
-                  onpressed: () {
-                    // Login action
-                  },
-                ),
-                SizedBox(height: 12.h),
-
+                // Top Action Bar (Language Switcher & Theme Toggle)
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Spacer(),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ForgotPassScreen()),
-                        );
+                    // Language Switcher
+                    InkWell(
+                      onTap: () {
+                        context.read<LocaleCubit>().toggleLocale();
                       },
-                      child: Text(
-                        AppLocalizationsEn().forgotPassword,
-                        style: AppTextStyles.of(context).labelMedium.copyWith(
-                              color: AppColors.of(context).secondary,
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w600,
+                      borderRadius: BorderRadius.circular(20),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 5,
+                        ),
+                        decoration: BoxDecoration(
+                          color: colors.surfaceVariant,
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                            color: colors.border.withValues(alpha: 0.8),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.language_rounded,
+                              size: 15.sp,
+                              color: colors.primary,
                             ),
+                            const SizedBox(width: 5),
+                            Text(
+                              context.isRtl ? 'EN' : 'عربي',
+                              style: styles.labelMedium.copyWith(
+                                color: colors.primary,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 12.sp,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
+                    ),
+                    const SizedBox(width: 8),
+
+                    // Theme Toggle
+                    IconButton(
+                      icon: Icon(
+                        context.isDark
+                            ? Icons.light_mode_outlined
+                            : Icons.dark_mode_outlined,
+                        size: 20.sp,
+                        color: colors.textSecondary,
+                      ),
+                      tooltip: 'Toggle Theme',
+                      onPressed: () {
+                        context.read<ThemeCubit>().toggleTheme();
+                      },
                     ),
                   ],
                 ),
-                SizedBox(height: 46.h),
+                SizedBox(height: 12.h),
 
-                //* footer text
+                // Header with logo
+                AuthHeader(
+                  showLogo: true,
+                  authTitle: l10n.welcomeBack,
+                  authSubTitle: l10n.signInSubtitle,
+                ),
+                SizedBox(height: 32.h),
+
+                // Email Field
+                CustomTextField(
+                  hintTxt: l10n.emailHint,
+                  iconPath: 'assets/icons/msg_icon.svg',
+                  controller: emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.next,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return l10n.requiredField;
+                    }
+                    final emailRegex =
+                        RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+                    if (!emailRegex.hasMatch(value.trim())) {
+                      return l10n.invalidEmail;
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 14.h),
+
+                // Password Field
+                PassTextField(
+                  hintTxt: l10n.passwordHint,
+                  iconPath: 'assets/icons/lock_icon.svg',
+                  controller: passController,
+                  textInputAction: TextInputAction.done,
+                  onFieldSubmitted: (_) => _onSignInPressed(),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return l10n.requiredField;
+                    }
+                    if (value.length < 6) {
+                      return l10n.passwordTooShort;
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 10.h),
+
+                // Forgot Password Link
+                Align(
+                  alignment: AlignmentDirectional.centerEnd,
+                  child: TextButton(
+                    onPressed: () {
+                      context.push(AppRoutes.forgotPassword);
+                    },
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 4.h),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                    child: Text(
+                      l10n.forgotPassword,
+                      style: styles.labelMedium.copyWith(
+                        color: colors.secondary,
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 32.h),
+
+                // Sign In Button
+                CustomElevatedButton(
+                  label: l10n.signIn,
+                  buttonClr: colors.primary,
+                  labelClr: colors.onPrimary,
+                  isLoading: _isLoading,
+                  onpressed: _onSignInPressed,
+                ),
+                SizedBox(height: 36.h),
+
+                // Footer Text (New to Mammo Care? Create Account)
                 AuthFooterText(
-                  authFooterText1: 'New to Clarity?',
-                  authFooterText2: AppLocalizationsEn().createAccount,
+                  authFooterText1: l10n.newToApp,
+                  authFooterText2: l10n.createAccount,
                   onpressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => SignUpScreen()),
-                    );
+                    context.push(AppRoutes.register);
                   },
                 ),
               ],
@@ -106,14 +214,45 @@ class _LogInScreenState extends State<LogInScreen> {
         ),
       ),
     );
+
+    return Scaffold(
+      backgroundColor:
+          isDesktopOrWeb ? colors.surfaceVariant : colors.background,
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 480),
+          child: Container(
+            margin: isDesktopOrWeb
+                ? const EdgeInsets.symmetric(vertical: 28, horizontal: 16)
+                : EdgeInsets.zero,
+            decoration: isDesktopOrWeb
+                ? BoxDecoration(
+                    color: colors.surface,
+                    borderRadius: BorderRadius.circular(28),
+                    boxShadow: [
+                      BoxShadow(
+                        color: colors.shadow.withValues(alpha: 0.10),
+                        blurRadius: 28,
+                        spreadRadius: 0,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
+                    border: Border.all(
+                      color: colors.border.withValues(alpha: 0.6),
+                    ),
+                  )
+                : null,
+            child: content,
+          ),
+        ),
+      ),
+    );
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
-    passController.dispose();
     emailController.dispose();
-
+    passController.dispose();
     super.dispose();
   }
 }

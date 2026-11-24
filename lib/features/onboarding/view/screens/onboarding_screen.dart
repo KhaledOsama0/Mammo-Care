@@ -128,8 +128,8 @@ class _OnboardingScreenViewState extends State<_OnboardingScreenView> {
                       // Top Header (Skip button + Language/Theme Switcher)
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 20.0,
-                          vertical: 12.0,
+                          horizontal: 14.0,
+                          vertical: 8.0,
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -145,8 +145,8 @@ class _OnboardingScreenViewState extends State<_OnboardingScreenView> {
                                   borderRadius: BorderRadius.circular(20),
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(
-                                      horizontal: 12,
-                                      vertical: 6,
+                                      horizontal: 8,
+                                      vertical: 4,
                                     ),
                                     decoration: BoxDecoration(
                                       color: colors.surfaceVariant,

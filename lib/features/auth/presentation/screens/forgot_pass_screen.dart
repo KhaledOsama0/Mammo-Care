@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mammo_care/core/theme/app_colors.dart';
-import 'package:mammo_care/core/widgets/custom_elevated_button.dart';
-import 'package:mammo_care/features/auth/presentation/screens/login_screen.dart';
-import 'package:mammo_care/features/auth/presentation/widgets/auth_footer_text.dart';
-import 'package:mammo_care/features/auth/presentation/widgets/auth_header.dart';
-import 'package:mammo_care/features/auth/presentation/widgets/custom_text_field.dart';
-import 'package:mammo_care/l10n/app_localizations_en.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../core/router/app_routes.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/context_ext.dart';
+import '../../../../core/widgets/custom_elevated_button.dart';
+import '../widgets/auth_footer_text.dart';
+import '../widgets/auth_header.dart';
+import '../widgets/custom_text_field.dart';
 
 class ForgotPassScreen extends StatefulWidget {
   const ForgotPassScreen({super.key});
@@ -16,56 +17,83 @@ class ForgotPassScreen extends StatefulWidget {
 }
 
 class _ForgotPassScreenState extends State<ForgotPassScreen> {
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
+  bool _isLoading = false;
+
+  void _onSendPressed() {
+    if (_formKey.currentState?.validate() ?? false) {
+      setState(() => _isLoading = true);
+      Future.delayed(const Duration(milliseconds: 1200), () {
+        if (mounted) {
+          setState(() => _isLoading = false);
+          context.push(AppRoutes.resetPassword);
+        }
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.of(context).background,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 44.h),
+    final colors = AppColors.of(context);
+    final l10n = context.l10n;
+    final isDesktopOrWeb = context.isDesktopOrWeb;
+
+    final content = SafeArea(
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 28.w, vertical: 24.h),
+          child: Form(
+            key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                //* header
                 AuthHeader(
-                    authTitle: AppLocalizationsEn().forgotPassword,
-                    authSubTitle:
-                        'Enter your email and we’ll send you a secure verification code.'),
-                SizedBox(height: 28.h),
+                  onBack: () => context.pop(),
+                  authTitle: l10n.forgotPassword,
+                  authSubTitle: l10n.forgotPasswordSubtitle,
+                ),
+                SizedBox(height: 32.h),
 
-                //*email
+                // Email
                 CustomTextField(
-                  hintTxt: AppLocalizationsEn().emailHint,
+                  hintTxt: l10n.emailHint,
                   iconPath: 'assets/icons/msg_icon.svg',
                   controller: emailController,
-                ),
-
-                SizedBox(height: 46.h),
-
-                //* elevated button
-
-                CustomElevatedButton(
-                  label: 'Send verification code',
-                  buttonClr: AppColors.of(context).primary,
-                  labelClr: Colors.white,
-                  onpressed: () {
-                    //  action
+                  keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.done,
+                  onFieldSubmitted: (_) => _onSendPressed(),
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return l10n.requiredField;
+                    }
+                    final emailRegex =
+                        RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+                    if (!emailRegex.hasMatch(value.trim())) {
+                      return l10n.invalidEmail;
+                    }
+                    return null;
                   },
                 ),
-                SizedBox(height: 46.h),
+                SizedBox(height: 36.h),
 
-                //* footer text
+                // Button
+                CustomElevatedButton(
+                  label: l10n.sendVerificationCode,
+                  buttonClr: colors.primary,
+                  labelClr: colors.onPrimary,
+                  isLoading: _isLoading,
+                  onpressed: _onSendPressed,
+                ),
+                SizedBox(height: 36.h),
+
+                // Footer (Already have an account? Sign in)
                 AuthFooterText(
-                  authFooterText1: 'Remembered it?',
-                  authFooterText2: 'Back to sign in',
+                  authFooterText1: l10n.alreadyHaveAccount,
+                  authFooterText2: l10n.signIn,
                   onpressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => LogInScreen()),
-                    );
+                    context.pop();
                   },
                 ),
               ],
@@ -74,13 +102,44 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
         ),
       ),
     );
+
+    return Scaffold(
+      backgroundColor:
+          isDesktopOrWeb ? colors.surfaceVariant : colors.background,
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 480),
+          child: Container(
+            margin: isDesktopOrWeb
+                ? const EdgeInsets.symmetric(vertical: 28, horizontal: 16)
+                : EdgeInsets.zero,
+            decoration: isDesktopOrWeb
+                ? BoxDecoration(
+                    color: colors.surface,
+                    borderRadius: BorderRadius.circular(28),
+                    boxShadow: [
+                      BoxShadow(
+                        color: colors.shadow.withValues(alpha: 0.10),
+                        blurRadius: 28,
+                        spreadRadius: 0,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
+                    border: Border.all(
+                      color: colors.border.withValues(alpha: 0.6),
+                    ),
+                  )
+                : null,
+            child: content,
+          ),
+        ),
+      ),
+    );
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     emailController.dispose();
-
     super.dispose();
   }
 }

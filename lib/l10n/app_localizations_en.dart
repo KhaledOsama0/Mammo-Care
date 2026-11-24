@@ -88,6 +88,41 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fullNameHint => 'Enter your full name';
 
   @override
+  String get firstName => 'First name';
+
+  @override
+  String get firstNameHint => 'Enter first name';
+
+  @override
+  String get lastName => 'Last name';
+
+  @override
+  String get lastNameHint => 'Enter last name';
+
+  @override
+  String get signUpSubtitle =>
+      'A secure space for your scans, reports, and care team.';
+
+  @override
+  String get forgotPasswordSubtitle =>
+      'Enter your email and we\'ll send you a secure verification code.';
+
+  @override
+  String get sendVerificationCode => 'Send verification code';
+
+  @override
+  String get invalidEmail => 'Please enter a valid email address';
+
+  @override
+  String get passwordTooShort => 'Password must be at least 6 characters';
+
+  @override
+  String get passwordsDoNotMatch => 'Passwords do not match';
+
+  @override
+  String get requiredField => 'This field is required';
+
+  @override
   String get confirmPassword => 'Confirm password';
 
   @override
