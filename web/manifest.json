@@ -1,11 +1,11 @@
 {
-    "name": "mammo_care",
-    "short_name": "mammo_care",
+    "name": "Mammo Care",
+    "short_name": "Mammo Care",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#F5F9FA",
+    "theme_color": "#244B5E",
+    "description": "Mammo Care — AI-supported cancer screening and compassionate follow-up care.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
