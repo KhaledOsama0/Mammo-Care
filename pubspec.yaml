@@ -1,31 +1,61 @@
 name: mammo_care
-description: "A new Flutter project."
+description: "Mammo Care — AI-powered breast health screening app."
 publish_to: 'none'
-version: 0.1.0+1
+version: 1.0.0+1
 
 environment:
-  sdk: ^3.13.7
+  sdk: ^3.5.0
 
 dependencies:
   flutter:
     sdk: flutter
-  supabase_flutter: ^2.18.3
+  flutter_localizations:
+    sdk: flutter
+
+  # Backend
+  supabase_flutter: ^2.8.4
+
+  # State Management (MVVM ViewModel)
+  flutter_bloc: ^8.1.6
+  equatable: ^2.0.5
+
+
+  # Navigation
+  go_router: ^14.6.2
+
+  # UI & Fonts
+  google_fonts: ^6.2.1
+  flutter_svg: ^2.0.10+1
+  cached_network_image: ^3.4.1
+
+  # Utils
+  intl: ^0.19.0
+  image_picker: ^1.1.2
+  shared_preferences: ^2.3.3
 
 dev_dependencies:
-  flutter_lints: ^6.0.0
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
   flutter_launcher_icons: "^0.14.4"
 
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
   image_path: "assets/images/logos/logo.png"
-  min_sdk_android: 21 # android min sdk min:16, default 21
+  min_sdk_android: 21
   web:
     generate: true
-    image_path: "path/to/image.png"
-    background_color: "#hexcode"
-    theme_color: "#hexcode"
+    image_path: "assets/images/logos/logo.png"
+    background_color: "#F5F9FA"
+    theme_color: "#244B5E"
 
 flutter:
   uses-material-design: true
-  
+  generate: true
+
+  assets:
+    - assets/images/
+    - assets/images/logos/
+    - assets/icons/
+
