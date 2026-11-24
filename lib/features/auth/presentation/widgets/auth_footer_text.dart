@@ -20,33 +20,36 @@ class AuthFooterText extends StatelessWidget {
     final colors = AppColors.of(context);
     final styles = AppTextStyles.of(context);
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          authFooterText1,
-          style: styles.bodyMedium.copyWith(
-            color: colors.textSecondary,
-            fontSize: 14.sp,
-          ),
-        ),
-        TextButton(
-          onPressed: onpressed,
-          style: TextButton.styleFrom(
-            padding: EdgeInsets.symmetric(horizontal: 4.w),
-            minimumSize: Size(0, 40.h),
-            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          ),
-          child: Text(
-            authFooterText2,
+    return Center(
+      child: Wrap(
+        alignment: WrapAlignment.center,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: [
+          Text(
+            authFooterText1,
             style: styles.bodyMedium.copyWith(
-              color: colors.secondary,
+              color: colors.textSecondary,
               fontSize: 14.sp,
-              fontWeight: FontWeight.w600,
             ),
           ),
-        ),
-      ],
+          TextButton(
+            onPressed: onpressed,
+            style: TextButton.styleFrom(
+              padding: EdgeInsets.symmetric(horizontal: 4.w),
+              minimumSize: Size(0, 40.h),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+            child: Text(
+              authFooterText2,
+              style: styles.bodyMedium.copyWith(
+                color: colors.secondary,
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
