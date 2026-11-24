@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'core/config/supabase_config.dart';
 import 'core/localization/locale_cubit.dart';
 import 'core/router/app_router.dart';
@@ -56,17 +57,26 @@ class MainApp extends StatelessWidget {
             builder: (context, locale) {
               final isArabic = locale.languageCode == 'ar';
 
-              return MaterialApp.router(
-                title: 'Mammo Care',
-                debugShowCheckedModeBanner: false,
-                scrollBehavior: const AppScrollBehavior(),
-                routerConfig: AppRouter.router,
-                theme: AppTheme.light(isArabic: isArabic),
-                darkTheme: AppTheme.dark(isArabic: isArabic),
-                themeMode: themeMode,
-                locale: locale,
-                localizationsDelegates: AppLocalizations.localizationsDelegates,
-                supportedLocales: AppLocalizations.supportedLocales,
+              return ScreenUtilInit(
+                designSize: const Size(390, 844),
+                minTextAdapt: true,
+                splitScreenMode: true,
+                ensureScreenSize: true,
+                builder: (context, child) {
+                  return MaterialApp.router(
+                    title: 'Mammo Care',
+                    debugShowCheckedModeBanner: false,
+                    scrollBehavior: const AppScrollBehavior(),
+                    routerConfig: AppRouter.router,
+                    theme: AppTheme.light(isArabic: isArabic),
+                    darkTheme: AppTheme.dark(isArabic: isArabic),
+                    themeMode: themeMode,
+                    locale: locale,
+                    localizationsDelegates:
+                        AppLocalizations.localizationsDelegates,
+                    supportedLocales: AppLocalizations.supportedLocales,
+                  );
+                },
               );
             },
           );
