@@ -11,13 +11,19 @@ class SplashCubit extends Cubit<SplashState> {
       : _authRepository = authRepository ?? AuthRepository(),
         super(const SplashInitial());
 
-  Future<void> init() async {
+  Future<void> init({bool forceShowOnboarding = true}) async {
     emit(const SplashLoading());
 
     // Allow user to see branding animation (2.5 seconds)
     await Future.delayed(const Duration(milliseconds: 2500));
 
     try {
+      // دائماً الانتقال إلى الـ Onboarding لعرض التدفق كاملاً للدكتور
+      if (forceShowOnboarding) {
+        emit(const SplashNavigating(SplashNavigationTarget.onboarding));
+        return;
+      }
+
       final prefs = await SharedPreferences.getInstance();
       final hasCompletedOnboarding =
           prefs.getBool(AppConstants.onboardingKey) ?? false;
