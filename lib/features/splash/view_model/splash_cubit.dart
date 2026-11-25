@@ -1,11 +1,15 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../auth/repository/auth_repository.dart';
 import 'splash_state.dart';
 
 class SplashCubit extends Cubit<SplashState> {
-  SplashCubit() : super(const SplashInitial());
+  final AuthRepository _authRepository;
+
+  SplashCubit({AuthRepository? authRepository})
+      : _authRepository = authRepository ?? AuthRepository(),
+        super(const SplashInitial());
 
   Future<void> init() async {
     emit(const SplashLoading());
@@ -23,9 +27,8 @@ class SplashCubit extends Cubit<SplashState> {
         return;
       }
 
-      // Check user session
-      final session = Supabase.instance.client.auth.currentSession;
-      if (session != null) {
+      // Check user session safely
+      if (_authRepository.isAuthenticated) {
         emit(const SplashNavigating(SplashNavigationTarget.home));
       } else {
         emit(const SplashNavigating(SplashNavigationTarget.login));

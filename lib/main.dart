@@ -7,6 +7,7 @@ import 'core/localization/locale_cubit.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_cubit.dart';
+import 'features/auth/view_model/auth_cubit.dart';
 import 'l10n/app_localizations.dart';
 
 class AppScrollBehavior extends MaterialScrollBehavior {
@@ -49,6 +50,9 @@ class MainApp extends StatelessWidget {
         ),
         BlocProvider<ThemeCubit>(
           create: (_) => ThemeCubit(),
+        ),
+        BlocProvider<AuthCubit>(
+          create: (_) => AuthCubit()..checkAuthStatus(),
         ),
       ],
       child: BlocBuilder<ThemeCubit, ThemeMode>(
