@@ -67,8 +67,6 @@ class _SplashScreenViewState extends State<_SplashScreenView>
     final colors = context.colors;
     final textStyles = context.textStyles;
 
-    final isDesktopOrWeb = context.isDesktopOrWeb;
-
     return BlocListener<SplashCubit, SplashState>(
       listener: (context, state) {
         if (!context.mounted) return;
@@ -87,88 +85,66 @@ class _SplashScreenViewState extends State<_SplashScreenView>
         }
       },
       child: Scaffold(
-        backgroundColor:
-            isDesktopOrWeb ? colors.surfaceVariant : colors.background,
-        body: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 520),
-            child: Container(
-              margin: isDesktopOrWeb
-                  ? const EdgeInsets.symmetric(vertical: 24, horizontal: 16)
-                  : EdgeInsets.zero,
-              decoration: isDesktopOrWeb
-                  ? BoxDecoration(
-                      color: colors.surface,
-                      borderRadius: BorderRadius.circular(28),
-                      boxShadow: [
-                        BoxShadow(
-                          color: colors.shadow.withValues(alpha: 0.10),
-                          blurRadius: 28,
-                          spreadRadius: 0,
-                          offset: const Offset(0, 8),
-                        ),
-                      ],
-                      border: Border.all(
-                        color: colors.border.withValues(alpha: 0.6),
-                      ),
-                    )
-                  : null,
-              child: SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 32.0),
-                  child: FadeTransition(
-                    opacity: _fadeAnimation,
-                    child: ScaleTransition(
-                      scale: _scaleAnimation,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Spacer(flex: 3),
+        backgroundColor: colors.background,
+        body: SafeArea(
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 580),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                child: FadeTransition(
+                  opacity: _fadeAnimation,
+                  child: ScaleTransition(
+                    scale: _scaleAnimation,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Spacer(flex: 3),
 
-                          // Logo with decorative soft glow background
-                          Container(
-                            width: 140,
-                            height: 140,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: colors.surface,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: colors.secondary.withValues(alpha: 0.18),
-                                  blurRadius: 20,
-                                  spreadRadius: 0,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
-                            ),
-                            padding: const EdgeInsets.all(22),
-                            child: Image.asset(
-                              'assets/images/logos/mammo.png',
-                              fit: BoxFit.contain,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Image.asset(
-                                  'assets/images/logos/logo.png',
-                                  fit: BoxFit.contain,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Icon(
-                                      Icons.favorite_rounded,
-                                      size: 68,
-                                      color: colors.secondary,
-                                    );
-                                  },
-                                );
-                              },
-                            ),
+                        // Logo with decorative soft glow background
+                        Container(
+                          width: 140,
+                          height: 140,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: colors.surface,
+                            boxShadow: [
+                              BoxShadow(
+                                color: colors.secondary.withValues(alpha: 0.18),
+                                blurRadius: 24,
+                                spreadRadius: 0,
+                                offset: const Offset(0, 6),
+                              ),
+                            ],
                           ),
-                          const SizedBox(height: 48), // Clear gap from logo shadow to title
+                          padding: const EdgeInsets.all(22),
+                          child: Image.asset(
+                            'assets/images/logos/mammo.png',
+                            fit: BoxFit.contain,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Image.asset(
+                                'assets/images/logos/logo.png',
+                                fit: BoxFit.contain,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Icon(
+                                    Icons.favorite_rounded,
+                                    size: 68,
+                                    color: colors.secondary,
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                        ),
+                        const SizedBox(height: 48), // Clear gap from logo shadow to title
 
-                          // App Title
+                        // App Title
                         Text(
                           context.l10n.appName,
                           textAlign: TextAlign.center,
                           style: textStyles.brandName.copyWith(
-                            fontSize: 32,
+                            fontSize: 34,
                             fontWeight: FontWeight.w800,
                             letterSpacing: -0.5,
                             color: colors.primary,
@@ -190,11 +166,6 @@ class _SplashScreenViewState extends State<_SplashScreenView>
                         ),
 
                         const Spacer(flex: 2),
-
-                        // Subtle animated loading indicator
-                        
-
-                        const SizedBox(height: 16),
 
                         // Subtitle disclaimer/branding
                         Text(
@@ -218,7 +189,6 @@ class _SplashScreenViewState extends State<_SplashScreenView>
           ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 }

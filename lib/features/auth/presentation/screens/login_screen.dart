@@ -9,9 +9,9 @@ import '../../../../core/utils/context_ext.dart';
 import '../../../../core/widgets/custom_elevated_button.dart';
 import '../../view_model/auth_cubit.dart';
 import '../../view_model/auth_state.dart';
-import '../widgets/auth_app_bar.dart';
 import '../widgets/auth_footer_text.dart';
 import '../widgets/auth_header.dart';
+import '../widgets/auth_responsive_scaffold.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/pass_text_field.dart';
 
@@ -42,7 +42,6 @@ class _LogInScreenState extends State<LogInScreen> {
     final colors = AppColors.of(context);
     final styles = AppTextStyles.of(context);
     final l10n = context.l10n;
-    final isDesktopOrWeb = context.isDesktopOrWeb;
 
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
@@ -164,41 +163,9 @@ class _LogInScreenState extends State<LogInScreen> {
           ),
         );
 
-        return Scaffold(
-          backgroundColor:
-              isDesktopOrWeb ? colors.surfaceVariant : colors.background,
-          body: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 480),
-              child: Container(
-                margin: isDesktopOrWeb
-                    ? const EdgeInsets.symmetric(vertical: 28, horizontal: 16)
-                    : EdgeInsets.zero,
-                decoration: isDesktopOrWeb
-                    ? BoxDecoration(
-                        color: colors.surface,
-                        borderRadius: BorderRadius.circular(28),
-                        boxShadow: [
-                          BoxShadow(
-                            color: colors.shadow.withValues(alpha: 0.10),
-                            blurRadius: 28,
-                            spreadRadius: 0,
-                            offset: const Offset(0, 8),
-                          ),
-                        ],
-                        border: Border.all(
-                          color: colors.border.withValues(alpha: 0.6),
-                        ),
-                      )
-                    : null,
-                child: Scaffold(
-                  backgroundColor: Colors.transparent,
-                  appBar: const AuthAppBar(showBack: false),
-                  body: Center(child: content),
-                ),
-              ),
-            ),
-          ),
+        return AuthResponsiveScaffold(
+          showBack: false,
+          child: content,
         );
       },
     );
