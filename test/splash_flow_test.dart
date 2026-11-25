@@ -49,8 +49,8 @@ void main() {
     // Verify SignUpScreen is displayed
     expect(find.byType(SignUpScreen), findsOneWidget);
 
-    // Tap Back button on SignUpScreen
-    final backFinder = find.byIcon(Icons.arrow_back_rounded);
+    // Tap Back button on SignUpScreen AppBar
+    final backFinder = find.byTooltip('Back');
     expect(backFinder, findsOneWidget);
     await tester.tap(backFinder);
     await tester.pumpAndSettle();
