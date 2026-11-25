@@ -167,10 +167,16 @@ class AuthRepository {
             ? 'يوجد حساب مسجل بهذا البريد الإلكتروني بالفعل.'
             : 'An account with this email already exists.';
       }
-      if (message.contains('rate limit')) {
+      if (message.contains('60 second') || message.contains('once every')) {
         return isArabic
-            ? 'تم تجاوز الحد المسموح، يرجى الانتظار والمحاولة لاحقاً.'
-            : 'Too many requests. Please wait a moment and try again.';
+            ? 'لأسباب أمنية، يرجى الانتظار دقيقة واحدة (60 ثانية) قبل المحاولة مجدداً.'
+            : 'For security purposes, please wait 60 seconds before trying again.';
+      }
+      if (message.contains('rate limit') ||
+          message.contains('over_email_send_rate_limit')) {
+        return isArabic
+            ? 'تم تجاوز الحد الأقصى لإرسال الإيميلات (3-4 إيميلات في الساعة لخدمة Supabase المجانية). يرجى الانتظار أو تفعيل Custom SMTP في Supabase.'
+            : 'Email rate limit exceeded (Supabase free limit is 3-4 emails/hour). Please wait or enable Custom SMTP in Supabase.';
       }
       if (message.contains('network') || message.contains('socket')) {
         return isArabic
